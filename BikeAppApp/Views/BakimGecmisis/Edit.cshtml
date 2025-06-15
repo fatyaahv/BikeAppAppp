@@ -1,0 +1,50 @@
+﻿@model BikeAppApp.Models.BakimGecmisi
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_LayoutProje.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>BakimGecmisi</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="BakimId" />
+            <div class="form-group">
+                <label asp-for="MotosikletId" class="control-label"></label>
+                <select asp-for="MotosikletId" class="form-control" asp-items="ViewBag.MotosikletId"></select>
+                <span asp-validation-for="MotosikletId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ServisId" class="control-label"></label>
+                <select asp-for="ServisId" class="form-control" asp-items="ViewBag.ServisId"></select>
+                <span asp-validation-for="ServisId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BakimTarihi" class="control-label"></label>
+                <input asp-for="BakimTarihi" class="form-control" />
+                <span asp-validation-for="BakimTarihi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="YapilanIslemler" class="control-label"></label>
+                <input asp-for="YapilanIslemler" class="form-control" />
+                <span asp-validation-for="YapilanIslemler" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

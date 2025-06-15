@@ -1,0 +1,42 @@
+﻿@model IEnumerable<BikeAppApp.Models.BayiMotosiklet>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutProje.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Bayi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Motosiklet)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bayi.BayiId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Motosiklet.MotosikletId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.BayiMotosikletId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.BayiMotosikletId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.BayiMotosikletId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,55 @@
+﻿@model IEnumerable<BikeAppApp.Models.BakimGecmisi>
+
+@{
+    ViewData["Title"] = "Bakım Geçmişi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Bakım Geçmişi</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BakimTarihi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.YapilanIslemler)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Motosiklet)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Servis)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BakimTarihi)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.YapilanIslemler)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Motosiklet.MotosikletId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Servis.ServisId)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.BakimId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.BakimId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.BakimId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

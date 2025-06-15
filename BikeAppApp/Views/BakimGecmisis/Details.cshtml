@@ -1,0 +1,43 @@
+﻿@model BikeAppApp.Models.BakimGecmisi
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_LayoutProje.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>BakimGecmisi</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BakimTarihi)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.BakimTarihi)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.YapilanIslemler)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.YapilanIslemler)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Motosiklet)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Motosiklet.MotosikletId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Servis)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Servis.ServisId)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.BakimId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

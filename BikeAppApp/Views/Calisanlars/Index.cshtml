@@ -1,0 +1,72 @@
+﻿@model IEnumerable<BikeAppApp.Models.Calisanlar>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutProje.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Isim)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Soyisim)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telefon)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CalistigiYerTipi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CalistigiYer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CalistigiYerNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Isim)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Soyisim)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telefon)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CalistigiYerTipi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CalistigiYer.BayiId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CalistigiYerNavigation.ServisId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CalisanId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CalisanId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CalisanId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

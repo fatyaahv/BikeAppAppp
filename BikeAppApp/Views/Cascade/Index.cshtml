@@ -1,0 +1,58 @@
+﻿@model BikeAppApp.Models.Cascade
+
+@{
+    ViewData["Title"] = "Cascade Dropdown";
+    Layout = "~/Views/Shared/_LayoutProje.cshtml";
+}
+
+<h1>Cascade Dropdown</h1>
+
+<div class="form-group">
+    <label for="ccDropdown">Select CC:</label>
+    <select id="ccDropdown" class="form-control">
+        <option value="">Select CC</option>
+        @foreach (var item in Model.CCList)
+        {
+            <option value="@item.Value">@item.Text</option>
+        }
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="motorDropdown">Select Motor:</label>
+    <select id="motorDropdown" class="form-control">
+        <option value="">Select Motor</option>
+    </select>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#ccDropdown').change(function () {
+                var cc = $(this).val();
+                if (cc) {
+                    $.ajax({
+                        url: '@Url.Action("GetMotorsByCC", "Cascade")',
+                        data: { cc: cc },
+                        success: function (data) {
+                            var motorDropdown = $('#motorDropdown');
+                            motorDropdown.empty();
+                            motorDropdown.append('<option value="">Select Motor</option>');
+                            $.each(data, function (index, motor) {
+                                motorDropdown.append('<option>' + motor.Model + '</option>');
+                            });
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            console.log(xhr.status);
+                            console.log(thrownError);
+                        }
+                    });
+                } else {
+                    $('#motorDropdown').empty();
+                    $('#motorDropdown').append('<option value="">Select Motor</option>');
+                }
+            });
+        });
+    </script>
+}

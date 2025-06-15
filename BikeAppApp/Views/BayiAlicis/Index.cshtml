@@ -1,0 +1,54 @@
+﻿@model IEnumerable<BikeAppApp.Models.BayiAlici>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutProje.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SatisTarihi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Alici)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bayi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Motosiklet)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SatisTarihi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Alici.AliciId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bayi.BayiId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Motosiklet.MotosikletId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.BayiAliciId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.BayiAliciId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.BayiAliciId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

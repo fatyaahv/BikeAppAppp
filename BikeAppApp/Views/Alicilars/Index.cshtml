@@ -1,0 +1,44 @@
+﻿@model IEnumerable<BikeAppApp.Models.Alicilar>
+
+@{
+    ViewData["Title"] = "Alıcılar";
+    Layout = "~/Views/Shared/_LayoutProje.cshtml";
+}
+
+<div id="alicilar" class="container my-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Alıcılar</h1>
+            <p class="text-center">
+                <a class="btn btn-primary" asp-action="Create">Create New</a>
+            </p>
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Isim)</th>
+                        <th>@Html.DisplayNameFor(model => model.Soyisim)</th>
+                        <th>@Html.DisplayNameFor(model => model.Telefon)</th>
+                        <th>@Html.DisplayNameFor(model => model.Email)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Isim)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Soyisim)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Telefon)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                            <td>
+                                <a class="btn btn-sm btn-info" asp-action="Edit" asp-route-id="@item.AliciId">Edit</a>
+                                <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@item.AliciId">Details</a>
+                                <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.AliciId">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
