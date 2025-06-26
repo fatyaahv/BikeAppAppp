@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BikeAppApp.Models.Alicilar>
+﻿@model BikeAppApp.Helpers.PagedResult<BikeAppApp.Models.Alicilar>
 
 @{
     ViewData["Title"] = "Alıcılar";
@@ -9,36 +9,97 @@
     <div class="row">
         <div class="col-md-12">
             <h1 class="text-center">Alıcılar</h1>
+
             <p class="text-center">
                 <a class="btn btn-primary" asp-action="Create">Create New</a>
             </p>
+
+            <form method="get" asp-action="Index" class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Search by name or email..." />
+                    <button type="submit" class="btn btn-outline-secondary">Search</button>
+                </div>
+            </form>
+
             <table class="table table-striped">
                 <thead class="thead-dark">
                     <tr>
-                        <th>@Html.DisplayNameFor(model => model.Isim)</th>
-                        <th>@Html.DisplayNameFor(model => model.Soyisim)</th>
-                        <th>@Html.DisplayNameFor(model => model.Telefon)</th>
-                        <th>@Html.DisplayNameFor(model => model.Email)</th>
+                        <th>@Html.DisplayNameFor(model => model.Items[0].Isim)</th>
+                        <th>@Html.DisplayNameFor(model => model.Items[0].Soyisim)</th>
+                        <th>@Html.DisplayNameFor(model => model.Items[0].Telefon)</th>
+                        <th>@Html.DisplayNameFor(model => model.Items[0].Email)</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
+                    @if (Model.Items.Count == 0)
                     {
                         <tr>
-                            <td>@Html.DisplayFor(modelItem => item.Isim)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Soyisim)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Telefon)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                            <td>
-                                <a class="btn btn-sm btn-info" asp-action="Edit" asp-route-id="@item.AliciId">Edit</a>
-                                <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@item.AliciId">Details</a>
-                                <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.AliciId">Delete</a>
-                            </td>
+                            <td colspan="5" class="text-center">No records found.</td>
                         </tr>
+                    }
+                    else
+                    {
+                        foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Isim)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Soyisim)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Telefon)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                                <td>
+                                    <a class="btn btn-sm btn-info" asp-action="Edit" asp-route-id="@item.AliciId">Edit</a>
+                                    <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@item.AliciId">Details</a>
+                                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.AliciId">Delete</a>
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>
+
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    @if (Model.HasPreviousPage)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-searchString="@ViewData["CurrentFilter"]">Previous</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                    }
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        if (i == Model.PageNumber)
+                        {
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link">@i</span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-searchString="@ViewData["CurrentFilter"]">@i</a>
+                            </li>
+                        }
+                    }
+
+                    @if (Model.HasNextPage)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-searchString="@ViewData["CurrentFilter"]">Next</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled"><span class="page-link">Next</span></li>
+                    }
+                </ul>
+            </nav>
+
         </div>
     </div>
 </div>

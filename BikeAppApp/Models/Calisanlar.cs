@@ -30,6 +30,6 @@ namespace BikeAppApp.Models
         public virtual Bayiler? CalistigiYer { get; set; }
         [ForeignKey("CalistigiYerId")]
         [InverseProperty("Calisanlars")]
-        public virtual YetkiliServi? CalistigiYerNavigation { get; set; }
+        public virtual YetkiliServis? CalistigiYerNavigation { get; set; }
     }
 }

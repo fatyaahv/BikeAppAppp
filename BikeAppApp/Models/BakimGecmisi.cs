@@ -26,6 +26,6 @@ namespace BikeAppApp.Models
         public virtual Motosikletler? Motosiklet { get; set; }
         [ForeignKey("ServisId")]
         [InverseProperty("BakimGecmisis")]
-        public virtual YetkiliServi? Servis { get; set; }
+        public virtual YetkiliServis? Servis { get; set; }
     }
 }

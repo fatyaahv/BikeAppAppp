@@ -5,12 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using BikeAppApp.Models;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using BikeAppApp.Helpers;
 
 namespace BikeAppApp.Controllers
 {
     public class MotosikletlersController : Controller
     {
         private readonly MotoDBContext _context;
+        private const int PageSize = 5;
 
         public MotosikletlersController(MotoDBContext context)
         {
@@ -18,32 +20,45 @@ namespace BikeAppApp.Controllers
         }
 
         // GET: Motosikletlers
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString, int pageNumber = 1)
         {
-            var motosikletler = from m in _context.Motosikletlers select m;
+            ViewData["CurrentFilter"] = searchString;
+
+            var motosikletler = _context.Motosikletlers.AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
             {
                 motosikletler = motosikletler.Where(s => s.Marka.Contains(searchString) || s.Model.Contains(searchString));
             }
 
-            return View(await motosikletler.ToListAsync());
+            int totalItems = await motosikletler.CountAsync();
+
+            var items = await motosikletler
+                .OrderBy(m => m.Marka)
+                .Skip((pageNumber - 1) * PageSize)
+                .Take(PageSize)
+                .ToListAsync();
+
+            var pagedResult = new PagedResult<Motosikletler>
+            {
+                Items = items,
+                TotalItems = totalItems,
+                PageNumber = pageNumber,
+                PageSize = PageSize
+            };
+
+            return View(pagedResult);
         }
 
         // GET: Motosikletlers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Motosikletlers == null)
-            {
                 return NotFound();
-            }
 
-            var motosikletler = await _context.Motosikletlers
-                .FirstOrDefaultAsync(m => m.MotosikletId == id);
+            var motosikletler = await _context.Motosikletlers.FirstOrDefaultAsync(m => m.MotosikletId == id);
             if (motosikletler == null)
-            {
                 return NotFound();
-            }
 
             return View(motosikletler);
         }
@@ -63,15 +78,10 @@ namespace BikeAppApp.Controllers
             {
                 if (Fotoğraf != null && Fotoğraf.Length > 0)
                 {
-                    // Fotoğrafın kaydedileceği yol
                     var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", Fotoğraf.FileName);
-
                     using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
                         await Fotoğraf.CopyToAsync(stream);
-                    }
 
-                    // Fotoğraf yolu modelde saklanabilir
                     motosikletler.FotoğrafYolu = "/images/" + Fotoğraf.FileName;
                 }
 
@@ -86,15 +96,12 @@ namespace BikeAppApp.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Motosikletlers == null)
-            {
                 return NotFound();
-            }
 
             var motosikletler = await _context.Motosikletlers.FindAsync(id);
             if (motosikletler == null)
-            {
                 return NotFound();
-            }
+
             return View(motosikletler);
         }
 
@@ -104,9 +111,7 @@ namespace BikeAppApp.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("MotosikletId,Marka,Model,FotoğrafYolu,CC")] Motosikletler motosikletler, IFormFile Fotoğraf)
         {
             if (id != motosikletler.MotosikletId)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
@@ -114,25 +119,17 @@ namespace BikeAppApp.Controllers
                 {
                     if (Fotoğraf != null && Fotoğraf.Length > 0)
                     {
-                        // Eski fotoğrafı sil (isteğe bağlı)
                         if (!string.IsNullOrEmpty(motosikletler.FotoğrafYolu))
                         {
                             var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", motosikletler.FotoğrafYolu.TrimStart('/'));
                             if (System.IO.File.Exists(oldFilePath))
-                            {
                                 System.IO.File.Delete(oldFilePath);
-                            }
                         }
 
-                        // Yeni fotoğrafın kaydedileceği yol
                         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", Fotoğraf.FileName);
-
                         using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
                             await Fotoğraf.CopyToAsync(stream);
-                        }
 
-                        // Fotoğraf yolu modelde saklanabilir
                         motosikletler.FotoğrafYolu = "/images/" + Fotoğraf.FileName;
                     }
 
@@ -142,13 +139,9 @@ namespace BikeAppApp.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!MotosikletlerExists(motosikletler.MotosikletId))
-                    {
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -159,16 +152,11 @@ namespace BikeAppApp.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Motosikletlers == null)
-            {
                 return NotFound();
-            }
 
-            var motosikletler = await _context.Motosikletlers
-                .FirstOrDefaultAsync(m => m.MotosikletId == id);
+            var motosikletler = await _context.Motosikletlers.FirstOrDefaultAsync(m => m.MotosikletId == id);
             if (motosikletler == null)
-            {
                 return NotFound();
-            }
 
             return View(motosikletler);
         }
@@ -179,9 +167,8 @@ namespace BikeAppApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Motosikletlers == null)
-            {
-                return Problem("Entity set 'MotoDBContext.Motosikletlers'  is null.");
-            }
+                return Problem("Entity set 'MotoDBContext.Motosikletlers' is null.");
+
             var motosikletler = await _context.Motosikletlers.FindAsync(id);
             if (motosikletler != null)
             {
@@ -189,9 +176,7 @@ namespace BikeAppApp.Controllers
                 {
                     var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", motosikletler.FotoğrafYolu.TrimStart('/'));
                     if (System.IO.File.Exists(oldFilePath))
-                    {
                         System.IO.File.Delete(oldFilePath);
-                    }
                 }
                 _context.Motosikletlers.Remove(motosikletler);
             }
@@ -205,20 +190,16 @@ namespace BikeAppApp.Controllers
             return (_context.Motosikletlers?.Any(e => e.MotosikletId == id)).GetValueOrDefault();
         }
 
-        // Yeni Action: GetMotorsByCC
+        // Your existing GetMotorsByCC action
         public async Task<IActionResult> GetMotorsByCC(int cc, string marka, string sortBy)
         {
             var motors = _context.Motosikletlers.AsQueryable();
 
             if (cc > 0)
-            {
                 motors = motors.Where(m => m.CC == cc);
-            }
 
             if (!string.IsNullOrEmpty(marka))
-            {
                 motors = motors.Where(m => m.Marka.Contains(marka));
-            }
 
             switch (sortBy)
             {
@@ -239,6 +220,5 @@ namespace BikeAppApp.Controllers
 
             return Json(result);
         }
-
     }
 }

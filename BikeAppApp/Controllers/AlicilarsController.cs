@@ -1,16 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BikeAppApp.Models;
+using BikeAppApp.Helpers;
 
 namespace BikeAppApp.Controllers
 {
     public class AlicilarsController : Controller
     {
         private readonly MotoDBContext _context;
+        private const int PageSize = 5;
 
         public AlicilarsController(MotoDBContext context)
         {
@@ -18,12 +19,43 @@ namespace BikeAppApp.Controllers
         }
 
         // GET: Alicilars
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, int pageNumber = 1)
         {
-            return _context.Alicilars != null ?
-                        View(await _context.Alicilars.ToListAsync()) :
-                        Problem("Entity set 'MotoDBContext.Alicilars'  is null.");
+            ViewData["CurrentFilter"] = searchString;
+
+            if (_context.Alicilars == null)
+            {
+                return Problem("Entity set 'MotoDBContext.Alicilars'  is null.");
+            }
+
+            var query = _context.Alicilars.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                // Filtering by Isim (Name) or Email (adjust properties if needed)
+                query = query.Where(a => a.Isim.Contains(searchString) || a.Email.Contains(searchString));
+            }
+
+            int totalItems = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(a => a.Isim) // Sorting by Isim (Name)
+                .Skip((pageNumber - 1) * PageSize)
+                .Take(PageSize)
+                .ToListAsync();
+
+            var pagedResult = new PagedResult<Alicilar>
+            {
+                Items = items,
+                TotalItems = totalItems,
+                PageNumber = pageNumber,
+                PageSize = PageSize
+            };
+
+            return View(pagedResult);
         }
+
+        // The rest of your actions remain unchanged...
 
         // GET: Alicilars/Details/5
         public async Task<IActionResult> Details(int? id)

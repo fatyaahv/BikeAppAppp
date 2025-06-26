@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using BikeAppApp.Models;
+
 
 namespace BikeAppApp.Models
 {
@@ -23,7 +26,7 @@ namespace BikeAppApp.Models
         public virtual DbSet<Bayiler> Bayilers { get; set; } = null!;
         public virtual DbSet<Calisanlar> Calisanlars { get; set; } = null!;
         public virtual DbSet<Motosikletler> Motosikletlers { get; set; } = null!;
-        public virtual DbSet<YetkiliServi> YetkiliServis { get; set; } = null!;
+        public virtual DbSet<YetkiliServis> YetkiliServis { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -115,7 +118,7 @@ namespace BikeAppApp.Models
                     .HasName("PK__Motosikl__0B2DE72AE1AEB247");
             });
 
-            modelBuilder.Entity<YetkiliServi>(entity =>
+            modelBuilder.Entity<YetkiliServis>(entity =>
             {
                 entity.HasKey(e => e.ServisId)
                     .HasName("PK__YetkiliS__8BED6408D577BD41");

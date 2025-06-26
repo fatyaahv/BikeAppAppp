@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BikeAppApp.Models
 {
-    public partial class YetkiliServi
+    public partial class YetkiliServis
     {
-        public YetkiliServi()
+        public YetkiliServis()
         {
             BakimGecmisis = new HashSet<BakimGecmisi>();
             Calisanlars = new HashSet<Calisanlar>();
