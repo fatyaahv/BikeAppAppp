@@ -88,3 +88,12 @@ Application Layer: Contains the business logic and processes the data.
 Shared DTOs: Standardizes data structures for consistent communication.
 
 Database: Interactions are managed through Entity Framework Core, ensuring data persistence.
+
+
+📬 Contact
+
+For any inquiries or contributions:
+
+GitHub: [fatyaahv](https://github.com/fatyaahv/)
+
+Email: fatima.humbatli@gmail.com
